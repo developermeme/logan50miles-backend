@@ -77,11 +77,13 @@ public class ReferralImplementation implements ReferralService {
 		return referralPlanRepository.findAll();
 	}
 	@Override
-	public String updatePlan(int planId, ReferralPlan referralPlan, MultipartFile file) {
-		ReferralPlan rp=referralPlanRepository.findByPlanID(planId);
+	public String updatePlan(ReferralPlan referralPlan, MultipartFile file) {
+		ReferralPlan rp=referralPlanRepository.findByPlanID(referralPlan.getPlanID());
 		rp.setPlanID(referralPlan.getPlanID());
 		rp.setPlanName(referralPlan.getPlanName());
 		rp.setPlanAmount(referralPlan.getPlanAmount());
+		rp.setValidty(referralPlan.getValidty());
+		rp.setDiscounts(referralPlan.getDiscounts());
 		referralPlanRepository.save(rp);
 		return "updated";
 	}
@@ -105,7 +107,8 @@ public class ReferralImplementation implements ReferralService {
 	@Override
 	public String updateSubscription(String plan,String cusId,String pstatus) throws ParseException {
 		ReferralSubscription rs=referralSubscriptionRepository.findByCusId(cusId);
-		LocalDate today = LocalDate.now().plusMonths(1);
+		ReferralPlan ref = referralPlanRepository.findByPlanName(plan);
+		LocalDate today = LocalDate.now().plusMonths(ref.getValidty());
 		Date date=new SimpleDateFormat("yyyy-MM-dd").parse(today.toString());
 		LocalDate today1 = LocalDate.now();
 		Date date1=new SimpleDateFormat("yyyy-MM-dd").parse(today1.toString());

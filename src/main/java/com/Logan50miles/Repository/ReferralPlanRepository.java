@@ -8,4 +8,6 @@ public interface ReferralPlanRepository extends JpaRepository<ReferralPlan, Inte
 
 	ReferralPlan findByPlanID(int planId);
 
+	ReferralPlan findByPlanName(String plan);
+
 }

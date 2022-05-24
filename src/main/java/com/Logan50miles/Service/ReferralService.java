@@ -17,7 +17,7 @@ public interface ReferralService {
 
 	List<ReferralPlan> getReferralPlan();
 
-	String updatePlan(int planId, ReferralPlan referralPlan, MultipartFile file);
+	String updatePlan(ReferralPlan referralPlan, MultipartFile file);
 
 	ReferralSubscription addReferralSubcription(ReferralSubscription referralSubscription);
 

@@ -15,6 +15,9 @@ public class ReferralPlan {
 	private double planAmount;
 	private double bonusPercentage;
 	private String imageUrl;
+	private long validty;
+	private String discounts;
+	
 	public ReferralPlan() {
 		
 	}
@@ -47,6 +50,18 @@ public class ReferralPlan {
 	}
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
+	}
+	public long getValidty() {
+		return validty;
+	}
+	public void setValidty(long validty) {
+		this.validty = validty;
+	}
+	public String getDiscounts() {
+		return discounts;
+	}
+	public void setDiscounts(String discounts) {
+		this.discounts = discounts;
 	}
 	
 	

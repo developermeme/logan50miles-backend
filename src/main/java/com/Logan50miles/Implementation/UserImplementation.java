@@ -29,8 +29,6 @@ import com.Logan50miles.Entity.User;
 import com.Logan50miles.Repository.OtpConfirmationRepository;
 import com.Logan50miles.Repository.UserRepository;
 import com.Logan50miles.Service.UserService;
-import com.Logan50miles.Util.ResourceNotFoundException;
-
 
 @Service
 public class UserImplementation implements UserService {

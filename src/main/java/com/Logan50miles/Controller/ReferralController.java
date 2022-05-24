@@ -45,8 +45,8 @@ public class ReferralController {
 	}
 
 	@PutMapping("update/Plan")
-	public String updatePlan(int planId, ReferralPlan referralPlan, MultipartFile file) {
-		return referralService.updatePlan(planId, referralPlan, file);
+	public String updatePlan(ReferralPlan referralPlan, MultipartFile file) {
+		return referralService.updatePlan(referralPlan, file);
 	}
 
 	@PostMapping("add/ReferralSubcription")

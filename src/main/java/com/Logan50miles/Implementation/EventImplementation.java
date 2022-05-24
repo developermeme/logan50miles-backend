@@ -1,7 +1,9 @@
 package com.Logan50miles.Implementation;
 
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.util.List;
+import java.util.Random;
 
 import javax.annotation.PostConstruct;
 
@@ -91,13 +93,15 @@ public class EventImplementation implements EventService{
 	@Override
 	public BookingEvents addBookingEvents(BookingEvents bookingEvents, MultipartFile file, MultipartFile file1) throws IOException{
 		if(file!=null) {
-			this.uploadImage(file, "events");
+			this.uploadImage(file, "event");
 			bookingEvents.setIdurl(image+file.getOriginalFilename());
 		}
 		if(file1!=null) {
-			this.uploadImage(file1, "events");
+			this.uploadImage(file1, "event");
 			bookingEvents.setVideourl(image+file1.getOriginalFilename());	
 		}
+		bookingEvents.setStatus("WAITING FOR APPROVAL");
+		bookingEvents.setRegistrationnumber(createCode());		
 		return bookingEventsRepository.save(bookingEvents);
 	}
 	
@@ -116,6 +120,20 @@ public class EventImplementation implements EventService{
 		bookingEventsRepository.deleteById(id);
 		return "Booking Events Deleted";
 	}
+	
+	 public String createCode(){
+	        int codeLength=4;
+	        char[] chars = "abcdefghijklmnopqrstuvwxyz1234567890".toCharArray();
+	        StringBuilder sb = new StringBuilder();
+	        Random random = new SecureRandom();
+	        for (int i = 0; i < codeLength; i++) {
+	            char c = chars[random.nextInt(chars.length)];
+	            sb.append(c);
+	        }
+	        String output = sb.toString();
+	        System.out.println(output);
+	        return output ;
+	    }
 	
 	//  Image Uploaded
     public String deleteS3Img(String keyName, String name) {
