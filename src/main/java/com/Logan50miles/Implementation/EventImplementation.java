@@ -157,4 +157,11 @@ public class EventImplementation implements EventService{
     				image.getInputStream(), objectMetadata).withCannedAcl(CannedAccessControlList.PublicRead));
     	}
     } 
+    
+    @Override
+    public String updatePayment(int id, String tid) throws ResourceNotFoundException {
+    	BookingEvents b = bookingEventsRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Resource Not found"));
+    	b.setTnxid(tid);    	
+    	return "Payment Updated";
+    }
 }

@@ -28,6 +28,8 @@ public interface EventService {
 	List<BookingEvents> getByPhone(String phone);
 
 	String deleteBookingEvents(int id);
+
+	String updatePayment(int id, String tid) throws ResourceNotFoundException;
 	
 
 }
