@@ -11,6 +11,7 @@ import com.Logan50miles.Repository.BookingTicketsRepository;
 import com.Logan50miles.Repository.TicketsRepository;
 import com.Logan50miles.Service.TicketService;
 import com.Logan50miles.Util.ResourceNotFoundException;
+import com.Logan50miles.Util.Mailer;
 
 @Service
 public class TicketImplementation implements TicketService {
@@ -110,6 +111,8 @@ public class TicketImplementation implements TicketService {
 		t.setAvailabletickets(t.getAvailabletickets()-bt.getQuantity());
 		t.setBookedtickets(t.getBookedtickets()+bt.getQuantity());
 		ticketsRepository.save(t);
+		Mailer mail = new Mailer();
+    	mail.sendMail("LOGANMILES TICKET CONFIRMATION", "Tickets Booked" , bt.getUseremail(), "no_reply@memebike.tv", "Sal76928");   	
 		return bookingTicketsRepository.save(bt);
 	}
 	

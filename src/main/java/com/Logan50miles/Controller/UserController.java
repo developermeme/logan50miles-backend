@@ -9,12 +9,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.Logan50miles.Entity.Players;
 import com.Logan50miles.Entity.User;
 import com.Logan50miles.Service.UserService;
+import com.Logan50miles.Util.ResourceNotFoundException;
 
 @RestController
 @RequestMapping("/user")
@@ -71,4 +74,31 @@ public class UserController {
 	public String deleteUser(int id) {
 		return userService.deleteUser(id);
 	}
+	
+	@PostMapping("add/player")
+	public Players addPlayers(Players p, MultipartFile pimg) throws IOException{
+		return userService.addPlayers(p, pimg); 
+	}
+
+	@PutMapping("update/player")
+	public Players updatePlayers(Players p, MultipartFile pimg) throws IOException, ResourceNotFoundException {
+		return userService.updatePlayers(p, pimg);
+	}
+
+	@DeleteMapping("delete/player")
+	public String deletePlayers(int id) {
+		return userService.deletePlayers(id);
+	}
+
+	@GetMapping("get/all/players")
+	public List<Players> getAllPlayers() {
+		return userService.getAllPlayers();
+	}
+
+	@GetMapping("get/player/byId")
+	public Players getPlayerbyId(int id) throws ResourceNotFoundException {
+		return userService.getPlayerbyId(id);
+	}
+
+	
 }

@@ -25,10 +25,13 @@ import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.Logan50miles.Entity.OtpConfirmation;
+import com.Logan50miles.Entity.Players;
 import com.Logan50miles.Entity.User;
 import com.Logan50miles.Repository.OtpConfirmationRepository;
+import com.Logan50miles.Repository.PlayersRepository;
 import com.Logan50miles.Repository.UserRepository;
 import com.Logan50miles.Service.UserService;
+import com.Logan50miles.Util.ResourceNotFoundException;
 
 @Service
 public class UserImplementation implements UserService {
@@ -36,6 +39,9 @@ public class UserImplementation implements UserService {
 
 	@Autowired
     private UserRepository userRepository;
+	
+	@Autowired
+	private PlayersRepository playersRepository;
     
     @Autowired
     private OtpConfirmationRepository otpConfirmationRepository;
@@ -221,6 +227,70 @@ public class UserImplementation implements UserService {
             result = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\" : \"Please Register\"}");
         }
         return result;
+    }
+    
+    @Override
+    public Players addPlayers(Players p, MultipartFile pimg) throws IOException {
+    	
+    	if(pimg!=null) {
+    		this.uploadImage(pimg,"event");
+    		p.setPlayerimg(image+pimg.getOriginalFilename());
+    	}
+    	return playersRepository.save(p);
+    }
+    
+    @Override
+    public Players updatePlayers(Players p, MultipartFile pimg) throws IOException, ResourceNotFoundException {
+    	Players existance = playersRepository.findById(p.getPlayerid()).orElseThrow(()-> new ResourceNotFoundException("Resource Not found"));
+    	if(pimg!=null) {
+    		this.uploadImage(pimg, "event");
+    		existance.setPlayerimg(image+pimg.getOriginalFilename());
+    	}
+    	else {
+    		existance.setPlayerimg(existance.getPlayerimg());
+    	}
+    	if(p.getPlayername()!=null) {
+    		existance.setPlayername(p.getPlayername());
+    	}
+    	else {
+    		existance.setPlayername(existance.getPlayername());
+    	}
+    	if(p.getDescription()!=null) {
+    		existance.setDescription(p.getDescription());
+    	}
+    	else {
+    		existance.setDescription(existance.getDescription());
+    	}
+    	if(p.getEmail()!=null) {
+    		existance.setEmail(p.getEmail());
+    	}
+    	else {
+    		existance.setEmail(existance.getEmail());
+    	}
+    	if(p.getPhoneno()!=null) {
+    		existance.setPhoneno(p.getPhoneno());
+    	}
+    	else {
+    		existance.setPhoneno(existance.getPhoneno());
+    	}
+    	existance.setPlayerid(existance.getPlayerid());
+    	return playersRepository.save(existance);
+    }
+    
+    @Override
+    public String deletePlayers(int id) {
+    	playersRepository.deleteById(id);
+    	return "Player Deleted";
+    }
+    
+    @Override
+    public List<Players> getAllPlayers() {
+    	return playersRepository.findAll();
+    }
+    
+    @Override
+    public Players getPlayerbyId(int id) throws ResourceNotFoundException {
+    	return playersRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Resource Not found"));
     }
     
     //  Image Uploaded
