@@ -161,7 +161,9 @@ public class EventImplementation implements EventService{
     @Override
     public String updatePayment(int id, String tid) throws ResourceNotFoundException {
     	BookingEvents b = bookingEventsRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Resource Not found"));
-    	b.setTnxid(tid);    	
+    	b.setTnxid(tid); 
+    	b.setStatus("Paid");
+    	bookingEventsRepository.save(b);
     	return "Payment Updated";
     }
 }

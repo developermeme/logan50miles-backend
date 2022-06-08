@@ -20,6 +20,8 @@ public class User {
 	private String affiliateCode;
 	private String password;
 	private boolean isEnabled;
+	
+	
 
 	public User() {
 		
