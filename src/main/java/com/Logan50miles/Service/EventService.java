@@ -21,7 +21,7 @@ public interface EventService {
 
 	String deleteEvents(int id);
 
-	BookingEvents addBookingEvents(BookingEvents bookingEvents, MultipartFile file, MultipartFile file1)throws IOException;
+	BookingEvents addBookingEvents(BookingEvents bookingEvents, MultipartFile file, MultipartFile file1)throws IOException, ResourceNotFoundException;
 
 	List<BookingEvents> getBookings();
 

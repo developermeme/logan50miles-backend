@@ -14,11 +14,14 @@ public class Events {
 	private String title;
 	private String date;
 	private String details;
-	private long entry;
+	private double entry;
 	private boolean status;
 	private String url;
 	private String location;
 	private String time;
+	private int noofplayers;
+	private int availableplayers;
+	private int participatedplayers;
 	
 	public Events() {
 		
@@ -56,11 +59,11 @@ public class Events {
 		this.details = details;
 	}
 
-	public long getEntry() {
+	public double getEntry() {
 		return entry;
 	}
 
-	public void setEntry(long entry) {
+	public void setEntry(double entry) {
 		this.entry = entry;
 	}
 
@@ -95,6 +98,29 @@ public class Events {
 	public void setTime(String time) {
 		this.time = time;
 	}
-	
+
+	public int getNoofplayers() {
+		return noofplayers;
+	}
+
+	public void setNoofplayers(int noofplayers) {
+		this.noofplayers = noofplayers;
+	}
+
+	public int getAvailableplayers() {
+		return availableplayers;
+	}
+
+	public void setAvailableplayers(int availableplayers) {
+		this.availableplayers = availableplayers;
+	}
+
+	public int getParticipatedplayers() {
+		return participatedplayers;
+	}
+
+	public void setParticipatedplayers(int participatedplayers) {
+		this.participatedplayers = participatedplayers;
+	}
 	
 }

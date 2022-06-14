@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.Logan50miles.Entity.BookingEvents;
 import com.Logan50miles.Entity.Events;
+import com.Logan50miles.Entity.Tickets;
 import com.Logan50miles.Repository.BookingEventsRepository;
 import com.Logan50miles.Repository.EventsRepository;
 import com.Logan50miles.Service.EventService;
@@ -64,6 +65,8 @@ public class EventImplementation implements EventService{
 			this.uploadImage(file,"event");
 			events.setUrl(image+file.getOriginalFilename());
 		}
+		events.setAvailableplayers(events.getNoofplayers());
+		events.setParticipatedplayers(0);
 		return eventsRepository.save(events);
 	}
 	
@@ -91,7 +94,7 @@ public class EventImplementation implements EventService{
 	}
 	
 	@Override
-	public BookingEvents addBookingEvents(BookingEvents bookingEvents, MultipartFile file, MultipartFile file1) throws IOException{
+	public BookingEvents addBookingEvents(BookingEvents bookingEvents, MultipartFile file, MultipartFile file1) throws IOException, ResourceNotFoundException{
 		if(file!=null) {
 			this.uploadImage(file, "event");
 			bookingEvents.setIdurl(image+file.getOriginalFilename());
@@ -101,7 +104,11 @@ public class EventImplementation implements EventService{
 			bookingEvents.setVideourl(image+file1.getOriginalFilename());	
 		}
 		bookingEvents.setStatus("WAITING FOR APPROVAL");
-		bookingEvents.setRegistrationnumber(createCode());		
+		bookingEvents.setRegistrationnumber(createCode());
+		Events e = eventsRepository.findById(bookingEvents.getEid()).orElseThrow(()-> new ResourceNotFoundException("Resource Not found"));
+		e.setAvailableplayers(e.getAvailableplayers()-1);
+		e.setParticipatedplayers(e.getParticipatedplayers()+1);
+		eventsRepository.save(e);
 		return bookingEventsRepository.save(bookingEvents);
 	}
 	
