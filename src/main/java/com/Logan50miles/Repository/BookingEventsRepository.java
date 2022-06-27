@@ -11,5 +11,7 @@ public interface BookingEventsRepository extends JpaRepository<BookingEvents, In
 
 	List<BookingEvents> findByMobile(String phone);
 
+	List<BookingEvents> findAllByEid(int eid);
+
 	 
 }

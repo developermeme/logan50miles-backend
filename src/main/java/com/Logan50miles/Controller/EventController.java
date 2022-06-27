@@ -52,6 +52,10 @@ public class EventController {
 		return eventService.updateStatus(id); 
 	} 
 
+	@PutMapping("update/event")
+	public Events updateEvents(Events events, MultipartFile file) throws IOException, ResourceNotFoundException {
+		return eventService.updateEvents(events, file);
+	}
 	@DeleteMapping("delete/events") 
 	public String deleteEvents(int id){ 
 		return eventService.deleteEvents(id); 

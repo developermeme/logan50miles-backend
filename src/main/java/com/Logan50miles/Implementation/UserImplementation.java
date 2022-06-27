@@ -16,14 +16,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.DeleteObjectRequest;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.Logan50miles.Entity.OtpConfirmation;
 import com.Logan50miles.Entity.Players;
 import com.Logan50miles.Entity.User;
@@ -32,6 +24,14 @@ import com.Logan50miles.Repository.PlayersRepository;
 import com.Logan50miles.Repository.UserRepository;
 import com.Logan50miles.Service.UserService;
 import com.Logan50miles.Util.ResourceNotFoundException;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 
 @Service
 public class UserImplementation implements UserService {
@@ -101,6 +101,10 @@ public class UserImplementation implements UserService {
     		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
     		user.setUserReferral(createReferralCode());
     		userRepository.save(user);
+    		OtpConfirmation confirmationToken = new OtpConfirmation(user);
+			otpConfirmationRepository.save(confirmationToken);
+			verificationOtp(user.getuPhone(),
+					"Your PIKE50MILES user verification OTP is:" + confirmationToken.getOtp());
     		result = ResponseEntity.status(HttpStatus.CREATED).body("{\"message\" : \"User Registered Successfully\"}");
     	}
     	return result;
@@ -177,7 +181,7 @@ public class UserImplementation implements UserService {
             System.out.println(Otp.getOtp());
             otpConfirmationRepository.save(Otp);
 
-        //    verificationOtp(userData.getMobilenumber(), "MEMEMOVE verification OTP is:" + Otp.getOtp());
+            verificationOtp(userData.getuPhone(), "MEMEMOVE verification OTP is:" + Otp.getOtp());
             result = ResponseEntity.status(HttpStatus.CREATED).body("{ \"message\" : \""+Otp.getOtp()+"\"}");
         }else{
             result = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\" : \"Please Register\"}");

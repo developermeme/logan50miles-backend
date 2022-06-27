@@ -6,4 +6,6 @@ import com.Logan50miles.Entity.Events;
 
 public interface EventsRepository extends JpaRepository<Events, Integer>{
 
+	Events findByEventtype(String string);
+
 }

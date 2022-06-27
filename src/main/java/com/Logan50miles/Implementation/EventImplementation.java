@@ -14,10 +14,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.Logan50miles.Entity.BookingEvents;
 import com.Logan50miles.Entity.Events;
-import com.Logan50miles.Entity.Tickets;
 import com.Logan50miles.Repository.BookingEventsRepository;
 import com.Logan50miles.Repository.EventsRepository;
 import com.Logan50miles.Service.EventService;
+import com.Logan50miles.Util.ResourceNotFoundException;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
@@ -26,7 +26,6 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.Logan50miles.Util.ResourceNotFoundException;
 
 @Service
 public class EventImplementation implements EventService{
@@ -71,6 +70,74 @@ public class EventImplementation implements EventService{
 	}
 	
 	@Override
+	public Events updateEvents(Events events, MultipartFile file) throws IOException, ResourceNotFoundException {
+		Events ex = eventsRepository.findById(events.getEid()).orElseThrow(()-> new ResourceNotFoundException("Resource Not found"));
+		if(file!=null) {
+			this.uploadImage(file,"event");
+			ex.setUrl(image+file.getOriginalFilename());
+		}
+		else {
+			ex.setUrl(ex.getUrl());
+		}
+		if(events.getTitle()!=null) {
+			ex.setTitle(events.getTitle());
+		}
+		else {
+			ex.setTitle(ex.getTitle());
+		}
+		if(events.getDate()!=null) {
+			ex.setDate(events.getDate());
+		}
+		else {
+			ex.setDate(ex.getDate());
+		}
+		if(events.getDetails()!=null) {
+			ex.setDetails(events.getDetails());
+		}
+		else {
+			ex.setDetails(ex.getDetails());
+		}
+		if(events.getEntry()!=0) {
+			ex.setEntry(events.getEntry());
+		}
+		else {
+			ex.setEntry(ex.getEntry());
+		}
+		if(events.getLocation()!=null) {
+			ex.setLocation(events.getLocation());
+		}
+		else {
+			ex.setLocation(ex.getLocation());
+		}
+		if(events.getTime()!=null) {
+			ex.setTime(events.getTime());
+		}
+		else {
+			ex.setTime(ex.getTime());
+		}
+		if(events.getEventtype()!=null) {
+			ex.setEventtype(events.getEventtype());
+		}
+		else {
+			ex.setEventtype(ex.getEventtype());
+		}
+		if(events.getNoofplayers()!=0) {
+			ex.setNoofplayers(events.getNoofplayers());
+			ex.setAvailableplayers(ex.getNoofplayers()-ex.getParticipatedplayers());
+
+		}
+		else {
+			ex.setNoofplayers(ex.getNoofplayers());
+		}
+		
+		ex.setParticipatedplayers(ex.getParticipatedplayers());	
+		ex.setEid(ex.getEid());
+		ex.setStatus(ex.isStatus());
+		return eventsRepository.save(ex);
+		
+	}
+	
+	@Override
 	public Events getEvent(int id) throws ResourceNotFoundException {
 		return eventsRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Resource Not found"));
 	}
@@ -104,7 +171,7 @@ public class EventImplementation implements EventService{
 			bookingEvents.setVideourl(image+file1.getOriginalFilename());	
 		}
 		bookingEvents.setStatus("WAITING FOR APPROVAL");
-		bookingEvents.setRegistrationnumber(createCode());
+		bookingEvents.setRegistrationnumber(createCode());	
 		Events e = eventsRepository.findById(bookingEvents.getEid()).orElseThrow(()-> new ResourceNotFoundException("Resource Not found"));
 		e.setAvailableplayers(e.getAvailableplayers()-1);
 		e.setParticipatedplayers(e.getParticipatedplayers()+1);

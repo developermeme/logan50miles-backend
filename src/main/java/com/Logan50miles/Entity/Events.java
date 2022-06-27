@@ -22,6 +22,7 @@ public class Events {
 	private int noofplayers;
 	private int availableplayers;
 	private int participatedplayers;
+	private String eventtype;
 	
 	public Events() {
 		
@@ -122,5 +123,14 @@ public class Events {
 	public void setParticipatedplayers(int participatedplayers) {
 		this.participatedplayers = participatedplayers;
 	}
+
+	public String getEventtype() {
+		return eventtype;
+	}
+
+	public void setEventtype(String eventtype) {
+		this.eventtype = eventtype;
+	}
+	
 	
 }

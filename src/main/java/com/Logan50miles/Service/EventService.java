@@ -30,6 +30,8 @@ public interface EventService {
 	String deleteBookingEvents(int id);
 
 	String updatePayment(int id, String tid) throws ResourceNotFoundException;
+
+	Events updateEvents(Events events, MultipartFile file) throws IOException, ResourceNotFoundException;
 	
 
 }

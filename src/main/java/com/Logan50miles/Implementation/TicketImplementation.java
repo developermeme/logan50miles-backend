@@ -10,8 +10,8 @@ import com.Logan50miles.Entity.Tickets;
 import com.Logan50miles.Repository.BookingTicketsRepository;
 import com.Logan50miles.Repository.TicketsRepository;
 import com.Logan50miles.Service.TicketService;
-import com.Logan50miles.Util.ResourceNotFoundException;
 import com.Logan50miles.Util.Mailer;
+import com.Logan50miles.Util.ResourceNotFoundException;
 
 @Service
 public class TicketImplementation implements TicketService {
