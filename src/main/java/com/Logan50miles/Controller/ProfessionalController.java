@@ -43,8 +43,8 @@ public class ProfessionalController {
 	}
 
 	@PostMapping("Player/registeration")
-	public ResponseEntity<String> registerationPlayer(Professionals playerdetails, MultipartFile file)throws IOException {
-		return professionalService.registerationPlayer(playerdetails, file);
+	public ResponseEntity<String> registerationPlayer(Professionals playerdetails, MultipartFile file, MultipartFile file1, MultipartFile file2)throws IOException {
+		return professionalService.registerationPlayer(playerdetails, file, file1, file2);
 	}
 
 	@PostMapping("Player/login")
@@ -73,8 +73,8 @@ public class ProfessionalController {
 	}
 
 	@PutMapping("update/player")
-	public String updatePlayer(Professionals playerdetails, MultipartFile file) throws ResourceNotFoundException, IOException {
-		return professionalService.updatePlayer(playerdetails, file);
+	public String updatePlayer(Professionals playerdetails, MultipartFile file, MultipartFile file1, MultipartFile file2) throws ResourceNotFoundException, IOException {
+		return professionalService.updatePlayer(playerdetails, file, file1, file2);
 	}
 
 	@PostMapping("add/profile/feed")
@@ -157,9 +157,39 @@ public class ProfessionalController {
 		return professionalService.deleteProfileComment(id);
 	}
 	
-	@GetMapping("view/professionals")
-	public List<Professionals> viewProfessionals() {
-		return professionalService.viewProfessionals();
+	@GetMapping("view/professionals/byID")
+	public List<Professionals> viewProfessionals(int id) throws ResourceNotFoundException {
+		return professionalService.viewProfessionals(id);
+	}
+	
+	@GetMapping("view/professionals/byEventType")
+	public List<Professionals> viewProfessionals(String eventtype) {
+		return professionalService.viewProfessionals(eventtype);
+	}
+	
+	@GetMapping("get/professionals/byEventLevel")
+	public List<Professionals> getProfessionalsByEventLevel(String eventlevel) {
+		return professionalService.getProfessionalsByEventLevel(eventlevel);
+	}
+	
+	@PostMapping("approve/Player")
+	public String approvePlayer(int id, String status) throws ResourceNotFoundException {
+		return professionalService.approvePlayer(id, status);
+	}
+	
+	@GetMapping("get/all/feed/comment")
+	public List<FeedComment> getAllFeedComment(){
+		return professionalService.getAllFeedComment();
+	}
+	
+	@PostMapping("update/feed/comment/like")
+	public PlayerProfile updateLike(String type, int ppid, String userid) throws ResourceNotFoundException {
+		return professionalService.updateLike(type, ppid, userid);
+	}
+	
+	@GetMapping("get/like/byId")
+	public int getLikebyFeedId(int ppid) throws ResourceNotFoundException {
+		return professionalService.getLikebyFeedId(ppid);		
 	}
 	
 }

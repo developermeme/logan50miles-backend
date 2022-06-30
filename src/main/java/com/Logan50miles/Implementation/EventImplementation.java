@@ -17,6 +17,7 @@ import com.Logan50miles.Entity.Events;
 import com.Logan50miles.Repository.BookingEventsRepository;
 import com.Logan50miles.Repository.EventsRepository;
 import com.Logan50miles.Service.EventService;
+import com.Logan50miles.Util.Mailer;
 import com.Logan50miles.Util.ResourceNotFoundException;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -170,12 +171,21 @@ public class EventImplementation implements EventService{
 			this.uploadImage(file1, "event");
 			bookingEvents.setVideourl(image+file1.getOriginalFilename());	
 		}
-		bookingEvents.setStatus("WAITING FOR APPROVAL");
 		bookingEvents.setRegistrationnumber(createCode());	
 		Events e = eventsRepository.findById(bookingEvents.getEid()).orElseThrow(()-> new ResourceNotFoundException("Resource Not found"));
 		e.setAvailableplayers(e.getAvailableplayers()-1);
 		e.setParticipatedplayers(e.getParticipatedplayers()+1);
 		eventsRepository.save(e);
+		String text = "<h4><u>Hi "+bookingEvents.getName()+"</u></h4>"+
+				"<h5>"+bookingEvents.getTitle()+" Event has Registered Successfully. </h5><h5></h5>"+
+				"<h5><u> Event Information<u></h5>"+
+				"<h5>Event Registration No : "+bookingEvents.getRegistrationnumber()+"</h5>"+
+				"<h5>Event Name : "+bookingEvents.getDetails()+"</h5>"+
+				"<h5>Event Date : "+bookingEvents.getDate()+"</h5>";
+				
+		Mailer mail = new Mailer();
+    	mail.sendMail("PIKE50MILES PLAYER APPROVAL", text , bookingEvents.getMail(), "no_reply@memebike.tv", "Sal76928");   	
+		
 		return bookingEventsRepository.save(bookingEvents);
 	}
 	

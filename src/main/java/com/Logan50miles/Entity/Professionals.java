@@ -22,6 +22,15 @@ public class Professionals {
 	private String password;
 	private boolean isEnabled;
 	private String dob;
+	private String state;
+	private String city;
+	private String country;
+	private String instaurl;
+	private String fburl;
+	private String imgproof;
+	private String videoproof;
+	private String status;
+	private String eventlevel;
 	
 	public Professionals() {
 		
@@ -123,5 +132,78 @@ public class Professionals {
 		this.dob = dob;
 	}
 
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getInstaurl() {
+		return instaurl;
+	}
+
+	public void setInstaurl(String instaurl) {
+		this.instaurl = instaurl;
+	}
+
+	public String getFburl() {
+		return fburl;
+	}
+
+	public void setFburl(String fburl) {
+		this.fburl = fburl;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	public String getImgproof() {
+		return imgproof;
+	}
+
+	public void setImgproof(String imgproof) {
+		this.imgproof = imgproof;
+	}
+
+	public String getVideoproof() {
+		return videoproof;
+	}
+
+	public void setVideoproof(String videoproof) {
+		this.videoproof = videoproof;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public String getEventlevel() {
+		return eventlevel;
+	}
+
+	public void setEventlevel(String eventlevel) {
+		this.eventlevel = eventlevel;
+	}
+
+	
 	
 }

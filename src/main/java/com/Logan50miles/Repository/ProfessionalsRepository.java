@@ -11,5 +11,7 @@ public interface ProfessionalsRepository extends JpaRepository<Professionals, In
 	Professionals findByEmail(String email);
 
 	List<Professionals> findAllByEmail(String mail);
+
+	List<Professionals> findByEventlevel(String eventlevel);
 	
 }

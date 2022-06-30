@@ -19,7 +19,7 @@ public interface ProfessionalService {
 
 	List<Professionals> getAllPlayers();
 
-	ResponseEntity<String> registerationPlayer(Professionals playerdetails, MultipartFile file)throws IOException;
+	ResponseEntity<String> registerationPlayer(Professionals playerdetails, MultipartFile file, MultipartFile file1, MultipartFile file2)throws IOException;
 
 	ResponseEntity<String> loginPlayer(String emailId, String password);
 
@@ -31,7 +31,7 @@ public interface ProfessionalService {
 
 	ResponseEntity<String> confirmOtpVerification(String otp);
 
-	String updatePlayer(Professionals playerdetails, MultipartFile file) throws ResourceNotFoundException, IOException;
+	String updatePlayer(Professionals playerdetails, MultipartFile file, MultipartFile file1, MultipartFile file2) throws ResourceNotFoundException, IOException;
 
 	PlayerProfile addProfileFeed(PlayerProfile pp, MultipartFile feed) throws IOException;
 
@@ -65,7 +65,19 @@ public interface ProfessionalService {
 
 	String deleteProfileComment(int id);
 
-	List<Professionals> viewProfessionals();
+	List<Professionals> viewProfessionals(int id) throws ResourceNotFoundException;
+
+	List<Professionals> viewProfessionals(String eventtype);
+
+	List<Professionals> getProfessionalsByEventLevel(String eventlevel);
+
+	String approvePlayer(int id, String status) throws ResourceNotFoundException;
+
+	List<FeedComment> getAllFeedComment();
+
+	PlayerProfile updateLike(String type, int ppid, String userid) throws ResourceNotFoundException;
+
+	int getLikebyFeedId(int ppid) throws ResourceNotFoundException;
 
 	
 }

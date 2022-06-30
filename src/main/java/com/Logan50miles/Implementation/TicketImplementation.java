@@ -111,8 +111,15 @@ public class TicketImplementation implements TicketService {
 		t.setAvailabletickets(t.getAvailabletickets()-bt.getQuantity());
 		t.setBookedtickets(t.getBookedtickets()+bt.getQuantity());
 		ticketsRepository.save(t);
+		String text = "<h4><u>"+t.getEvent()+" Tickets Information:</u></h4>"+
+				"<h5>Email: "+bt.getUseremail()+"</h5>"+
+				"<h5>No of Tickets: "+bt.getQuantity()+"</h5>"+
+				"<h5>Venue: "+t.getVenue()+"</h5>"+
+				"<h5>Stand: "+t.getTickettype()+"</h5>"+
+				"<h5>Date: "+t.getDate()+"</h5>"+
+				"<h5>Amount Paid"+bt.getTotal()+"</h5>";
 		Mailer mail = new Mailer();
-    	mail.sendMail("LOGANMILES TICKET CONFIRMATION", "Tickets Booked" , bt.getUseremail(), "no_reply@memebike.tv", "Sal76928");   	
+    	mail.sendMail("PIKE50MILES TICKET CONFIRMATION", text , bt.getUseremail(), "no_reply@memebike.tv", "Sal76928");   	
 		return bookingTicketsRepository.save(bt);
 	}
 	

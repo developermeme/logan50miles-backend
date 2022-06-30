@@ -4,8 +4,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
 @Entity
 public class FeedComment {
@@ -15,10 +13,9 @@ public class FeedComment {
 	private int cid;
 	private String comment;
 	private String userid;
+	private String username;
 	private String date;
-	@ManyToOne
-	@JoinColumn(name = "ppid")
-	private PlayerProfile ppid;
+	private int ppid;
 	
 	public FeedComment() {
 		
@@ -56,12 +53,20 @@ public class FeedComment {
 		this.date = date;
 	}
 
-	public PlayerProfile getPpid() {
+	public int getPpid() {
 		return ppid;
 	}
 
-	public void setPpid(PlayerProfile ppid) {
+	public void setPpid(int ppid) {
 		this.ppid = ppid;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 	
 	
