@@ -1,10 +1,12 @@
 package com.Logan50miles.Service;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.Logan50miles.Entity.BookingTickets;
 import com.Logan50miles.Entity.Tickets;
 import com.Logan50miles.Util.ResourceNotFoundException;
+import com.google.zxing.WriterException;
 
 public interface TicketService {
 
@@ -18,7 +20,7 @@ public interface TicketService {
 
 	Tickets getTicketsbyId(int id) throws ResourceNotFoundException;
 
-	BookingTickets addBookingTickets(BookingTickets bt) throws ResourceNotFoundException;
+	BookingTickets addBookingTickets(BookingTickets bt) throws ResourceNotFoundException, WriterException, IOException;
 
 	BookingTickets updateBookingTickets(BookingTickets bt) throws ResourceNotFoundException;
 

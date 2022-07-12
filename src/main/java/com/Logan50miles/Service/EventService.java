@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.Logan50miles.Entity.BookingEvents;
 import com.Logan50miles.Entity.Events;
 import com.Logan50miles.Util.ResourceNotFoundException;
+import com.google.zxing.WriterException;
 
 public interface EventService {
 
@@ -21,7 +22,7 @@ public interface EventService {
 
 	String deleteEvents(int id);
 
-	BookingEvents addBookingEvents(BookingEvents bookingEvents, MultipartFile file, MultipartFile file1)throws IOException, ResourceNotFoundException;
+	BookingEvents addBookingEvents(BookingEvents bookingEvents, MultipartFile file, MultipartFile file1)throws IOException, ResourceNotFoundException, WriterException;
 
 	List<BookingEvents> getBookings();
 

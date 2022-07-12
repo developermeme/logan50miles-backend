@@ -1,5 +1,6 @@
 package com.Logan50miles.Controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.zxing.WriterException;
 import com.Logan50miles.Entity.BookingTickets;
 import com.Logan50miles.Entity.Tickets;
 import com.Logan50miles.Service.TicketService;
@@ -50,7 +52,7 @@ public class TicketController {
 	}
 
 	@PostMapping("add/bookingtickets")
-	public BookingTickets addBookingTickets(BookingTickets bt) throws ResourceNotFoundException {
+	public BookingTickets addBookingTickets(BookingTickets bt) throws ResourceNotFoundException, WriterException, IOException {
 		return ticketService.addBookingTickets(bt);
 	}
 

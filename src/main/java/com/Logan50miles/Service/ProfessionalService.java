@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.Logan50miles.Entity.FeedComment;
+import com.Logan50miles.Entity.Likes;
 import com.Logan50miles.Entity.PlayerProfile;
 import com.Logan50miles.Entity.Professionals;
 import com.Logan50miles.Entity.ProfileComment;
@@ -78,6 +79,12 @@ public interface ProfessionalService {
 	PlayerProfile updateLike(String type, int ppid, String userid) throws ResourceNotFoundException;
 
 	int getLikebyFeedId(int ppid) throws ResourceNotFoundException;
+
+	List<Likes> getAllLikes();
+
+	List<Likes> getLikesbyFeedId(int ppid);
+
+	Likes getLikesbyFeedIdandUserId(int ppid, String userid);
 
 	
 }

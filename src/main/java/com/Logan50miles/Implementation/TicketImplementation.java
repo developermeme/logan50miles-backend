@@ -1,5 +1,6 @@
 package com.Logan50miles.Implementation;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,9 @@ import com.Logan50miles.Repository.BookingTicketsRepository;
 import com.Logan50miles.Repository.TicketsRepository;
 import com.Logan50miles.Service.TicketService;
 import com.Logan50miles.Util.Mailer;
+import com.Logan50miles.Util.QRCodeGenerator;
 import com.Logan50miles.Util.ResourceNotFoundException;
+import com.google.zxing.WriterException;
 
 @Service
 public class TicketImplementation implements TicketService {
@@ -21,6 +24,7 @@ public class TicketImplementation implements TicketService {
 	@Autowired
 	private BookingTicketsRepository bookingTicketsRepository;
 	
+	String image = null;
 	@Override
 	public Tickets addTickets(Tickets t) {
 		t.setAvailabletickets(t.getNooftickets());
@@ -106,18 +110,24 @@ public class TicketImplementation implements TicketService {
 	}
 	
 	@Override
-	public BookingTickets addBookingTickets(BookingTickets bt) throws ResourceNotFoundException {
+	public BookingTickets addBookingTickets(BookingTickets bt) throws ResourceNotFoundException, WriterException, IOException {
 		Tickets t = ticketsRepository.findById(bt.getTicketid()).orElseThrow(()-> new ResourceNotFoundException("Resource Not found"));
 		t.setAvailabletickets(t.getAvailabletickets()-bt.getQuantity());
 		t.setBookedtickets(t.getBookedtickets()+bt.getQuantity());
 		ticketsRepository.save(t);
-		String text = "<h4><u>"+t.getEvent()+" Tickets Information:</u></h4>"+
+		image = QRCodeGenerator.getQRCodeImage(String.valueOf(bt.getBid()),250,250);
+		
+		String text =
+				"<div style=\"border:1px solid black; padding:10px ; text-align:center;\">"+
+				"<h4><u>"+t.getEvent()+" Tickets Information:</u></h4>"+
+				image+
 				"<h5>Email: "+bt.getUseremail()+"</h5>"+
 				"<h5>No of Tickets: "+bt.getQuantity()+"</h5>"+
 				"<h5>Venue: "+t.getVenue()+"</h5>"+
 				"<h5>Stand: "+t.getTickettype()+"</h5>"+
 				"<h5>Date: "+t.getDate()+"</h5>"+
-				"<h5>Amount Paid"+bt.getTotal()+"</h5>";
+				"<h5>Amount Paid"+bt.getTotal()+"</h5>"+
+				"</div>";
 		Mailer mail = new Mailer();
     	mail.sendMail("PIKE50MILES TICKET CONFIRMATION", text , bt.getUseremail(), "no_reply@memebike.tv", "Sal76928");   	
 		return bookingTicketsRepository.save(bt);

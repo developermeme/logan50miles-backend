@@ -18,6 +18,7 @@ import com.Logan50miles.Repository.BookingEventsRepository;
 import com.Logan50miles.Repository.EventsRepository;
 import com.Logan50miles.Service.EventService;
 import com.Logan50miles.Util.Mailer;
+import com.Logan50miles.Util.QRCodeGenerator;
 import com.Logan50miles.Util.ResourceNotFoundException;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -27,6 +28,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.google.zxing.WriterException;
 
 @Service
 public class EventImplementation implements EventService{
@@ -162,7 +164,7 @@ public class EventImplementation implements EventService{
 	}
 	
 	@Override
-	public BookingEvents addBookingEvents(BookingEvents bookingEvents, MultipartFile file, MultipartFile file1) throws IOException, ResourceNotFoundException{
+	public BookingEvents addBookingEvents(BookingEvents bookingEvents, MultipartFile file, MultipartFile file1) throws IOException, ResourceNotFoundException, WriterException{
 		if(file!=null) {
 			this.uploadImage(file, "event");
 			bookingEvents.setIdurl(image+file.getOriginalFilename());
@@ -176,9 +178,11 @@ public class EventImplementation implements EventService{
 		e.setAvailableplayers(e.getAvailableplayers()-1);
 		e.setParticipatedplayers(e.getParticipatedplayers()+1);
 		eventsRepository.save(e);
+		image = QRCodeGenerator.getQRCodeImage(String.valueOf(bookingEvents.getRegistrationnumber()),250,250);
 		String text = "<h4><u>Hi "+bookingEvents.getName()+"</u></h4>"+
 				"<h5>"+bookingEvents.getTitle()+" Event has Registered Successfully. </h5><h5></h5>"+
 				"<h5><u> Event Information<u></h5>"+
+				image+
 				"<h5>Event Registration No : "+bookingEvents.getRegistrationnumber()+"</h5>"+
 				"<h5>Event Name : "+bookingEvents.getDetails()+"</h5>"+
 				"<h5>Event Date : "+bookingEvents.getDate()+"</h5>";

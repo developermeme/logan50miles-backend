@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.Logan50miles.Entity.FeedComment;
+import com.Logan50miles.Entity.Likes;
 import com.Logan50miles.Entity.PlayerProfile;
 import com.Logan50miles.Entity.Professionals;
 import com.Logan50miles.Entity.ProfileComment;
@@ -191,5 +192,21 @@ public class ProfessionalController {
 	public int getLikebyFeedId(int ppid) throws ResourceNotFoundException {
 		return professionalService.getLikebyFeedId(ppid);		
 	}
+	
+	@GetMapping("get/all/likes")
+	public List<Likes> getAllLikes(){
+		return professionalService.getAllLikes();
+	}
+
+	@GetMapping("get/likes/byFeedId")
+	public List<Likes> getLikesbyFeedId(int ppid){
+		return professionalService.getLikesbyFeedId(ppid);
+	}
+
+	@GetMapping("get/likes/byFeedId/Userid")
+	public Likes getLikesbyFeedIdandUserId(int ppid, String userid) {
+		return professionalService.getLikesbyFeedIdandUserId(ppid, userid);
+	}
+
 	
 }

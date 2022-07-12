@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.Logan50miles.Entity.Address;
 import com.Logan50miles.Entity.Players;
 import com.Logan50miles.Entity.User;
+import com.Logan50miles.Model.ViewAddressList;
 import com.Logan50miles.Service.UserService;
 import com.Logan50miles.Util.ResourceNotFoundException;
 
@@ -41,6 +43,11 @@ public class UserController {
 	@PostMapping("confirmation") 
 	public ResponseEntity<String> confirmRegistration(String confirmationToken){ 
 		return userService.confirmRegistration(confirmationToken);
+	}
+	
+	@PostMapping("geusts/registration")
+	public ResponseEntity<String> GuestUserRegistration(User user) throws ParseException {
+		return userService.GuestUserRegistration(user);
 	}
 	
 	@PostMapping("forgotpassword") 
@@ -102,5 +109,28 @@ public class UserController {
 		return userService.getPlayerbyId(id);
 	}
 
+	@PostMapping("address")
+	public Address addAddress(Address address) {
+		return userService.addAddress(address);
+	}
+	@GetMapping("useraddress")
+	public User getUserAdddress(String email) {
+		return userService.getUserAddressByEmail(email);
+	}
+	@GetMapping("address")
+	public ViewAddressList getAddress(String email) {
+		return userService.getAddress(email);
+	}
+	
+	@PostMapping("address/id")
+	public String deleteAddress(int id) {
+		userService.deleteAddress(id);
+		return "deleted";
+	}
+
+	@PostMapping("user/address/update")
+	public String updateAddress(Address address,int addId) {
+		return userService.updateAddress(address, addId);
+	}
 	
 }

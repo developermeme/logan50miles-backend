@@ -534,7 +534,7 @@ public class ProfessionalImplementation implements ProfessionalService {
 		if (like != null) {
 			if (like.getType().equals("liked") && type.equals("liked")) {
 				existence.setLike(existence.getLike() - 1);
-				likesRepository.delete(like);
+				likesRepository.deleteById(like.getLikeid());
 			} 
 			else if (like.getType().equals("liked") && type.equals("disliked")) {
 				existence.setDislike(existence.getDislike() + 1);
@@ -544,7 +544,7 @@ public class ProfessionalImplementation implements ProfessionalService {
 			} 
 			else if (like.getType().equals("disliked") && type.equals("disliked")) {
 				existence.setDislike(existence.getDislike() - 1);
-				likesRepository.delete(like);
+				likesRepository.deleteById(like.getLikeid());
 			} 
 			else {
 				existence.setDislike(existence.getDislike() - 1);
@@ -572,6 +572,22 @@ public class ProfessionalImplementation implements ProfessionalService {
 		}
 		return playerProfileRepository.save(existence);
 	}
+	
+	@Override
+	public List<Likes> getAllLikes() {
+		return likesRepository.findAll();
+	}
+	
+	@Override
+	public List<Likes> getLikesbyFeedId(int ppid) {
+		return likesRepository.findByPpid(ppid);
+	}
+	
+	@Override
+	public Likes getLikesbyFeedIdandUserId(int ppid, String userid){
+		return likesRepository.findByPpidAndUserId(ppid, userid);
+	}
+	
 
 	// Image Uploaded
 	public String deleteS3Img(String keyName, String name) {

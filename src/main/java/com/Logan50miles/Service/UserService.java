@@ -7,8 +7,10 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.Logan50miles.Entity.Address;
 import com.Logan50miles.Entity.Players;
 import com.Logan50miles.Entity.User;
+import com.Logan50miles.Model.ViewAddressList;
 import com.Logan50miles.Util.ResourceNotFoundException;
 
 public interface UserService {
@@ -42,5 +44,17 @@ public interface UserService {
 	List<Players> getAllPlayers();
 
 	Players getPlayerbyId(int id) throws ResourceNotFoundException;
+
+	User getUserAddressByEmail(String email);
+
+	Address addAddress(Address address);
+
+	ViewAddressList getAddress(String email);
+
+	String deleteAddress(int id);
+
+	String updateAddress(Address address, int addId);
+
+	ResponseEntity<String> GuestUserRegistration(User user) throws ParseException;
 
 }

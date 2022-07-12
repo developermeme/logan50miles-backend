@@ -3,6 +3,10 @@ package com.Logan50miles.Implementation;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -16,11 +20,19 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.Logan50miles.Entity.Address;
 import com.Logan50miles.Entity.OtpConfirmation;
 import com.Logan50miles.Entity.Players;
+import com.Logan50miles.Entity.Referral;
+import com.Logan50miles.Entity.ReferralSubscription;
 import com.Logan50miles.Entity.User;
+import com.Logan50miles.Model.AddressTemp;
+import com.Logan50miles.Model.ViewAddressList;
+import com.Logan50miles.Repository.AddressRepository;
 import com.Logan50miles.Repository.OtpConfirmationRepository;
 import com.Logan50miles.Repository.PlayersRepository;
+import com.Logan50miles.Repository.ReferralRepository;
+import com.Logan50miles.Repository.ReferralSubscriptionRepository;
 import com.Logan50miles.Repository.UserRepository;
 import com.Logan50miles.Service.UserService;
 import com.Logan50miles.Util.ResourceNotFoundException;
@@ -38,13 +50,17 @@ public class UserImplementation implements UserService {
 
 
 	@Autowired
-    private UserRepository userRepository;
-	
+    private UserRepository userRepository;	
 	@Autowired
 	private PlayersRepository playersRepository;
-    
     @Autowired
     private OtpConfirmationRepository otpConfirmationRepository;
+    @Autowired
+    private AddressRepository addressRepository;
+    @Autowired
+    private ReferralSubscriptionRepository referralSubscriptionRepository;
+    @Autowired
+    private ReferralRepository referralRepository;
     
     //AWS S3 BUCKET ACCESS
     @Value("${cloud.aws.credentials.accessKey}")
@@ -129,7 +145,61 @@ public class UserImplementation implements UserService {
     	user.setEnabled(true);
     	return result; 
     }
+    
+    
+    @Override
+	public ResponseEntity<String> GuestUserRegistration(User user) throws ParseException {
+		ResponseEntity<String> result;
+		User existence = userRepository.findByEmail(user.getEmail());
+		if (existence != null) {
 
+			result = ResponseEntity.status(HttpStatus.CONFLICT).body("Already Registered");
+		}
+
+		else {
+			user.setUserReferral(createReferralCode());
+
+			if (user.getAffiliateCode() == null) {
+				user.setAffiliateCode("None affiliated");
+			} else {
+				this.getRefCount(user.getAffiliateCode());
+			}
+			/*
+			 * Referral module and increasing referral count on friend
+			 */
+			Referral referral = new Referral();
+			referral.setRefCod(user.getUserReferral());
+			referral.setCusId(user.getEmail());
+			referral.setRefCount(0);
+			referral.setRefAmount(0);
+			referralRepository.save(referral);
+
+			ReferralSubscription referralSubscribtion = new ReferralSubscription();
+			LocalDate today = LocalDate.now();
+			Date date = new SimpleDateFormat("yyyy-MM-dd").parse(today.toString());
+			referralSubscribtion.setCusId(user.getEmail());
+			referralSubscribtion.setPlan("SILVER");
+			referralSubscribtion.setDate(date);
+			referralSubscribtion.setStatus("ACTIVE");
+			referralSubscriptionRepository.save(referralSubscribtion);
+			user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+			user.setEnabled(true);
+			userRepository.save(user);
+			OtpConfirmation confirmationToken = new OtpConfirmation(user);
+			System.out.println(confirmationToken.getOtp());
+			otpConfirmationRepository.save(confirmationToken);
+			verificationOtp(user.getuPhone(),"Your PIKE50MILES verification OTP is:"+confirmationToken.getOtp());
+			result = ResponseEntity.status(HttpStatus.CREATED).body("registered:" + user.getUserid());
+		}
+		return result;
+	}
+
+
+    public void getRefCount(String refCod) {
+		Referral referral = referralRepository.findByRefCod(refCod);
+		referral.setRefCount(referral.getRefCount() + 1);
+	}
+    
     public String createReferralCode(){
         int codeLength=8;
         char[] chars = "abcdefghijklmnopqrstuvwxyz1234567890".toCharArray();
@@ -295,6 +365,67 @@ public class UserImplementation implements UserService {
     @Override
     public Players getPlayerbyId(int id) throws ResourceNotFoundException {
     	return playersRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Resource Not found"));
+    }
+    
+    @Override
+    public User getUserAddressByEmail(String email){
+    	return userRepository.findByEmail(email);
+    }
+    @Override
+    public Address addAddress(Address address) {
+    	return addressRepository.save(address);
+    }
+    @Override
+    public ViewAddressList getAddress(String email) {
+    	User user=userRepository.findByEmail(email);
+    	ViewAddressList viewAddressList=new ViewAddressList();
+    	List<AddressTemp> address=new ArrayList<AddressTemp>();
+    	viewAddressList.setUserid(user.getUserid());
+    	viewAddressList.setuName(user.getFname());
+    	viewAddressList.setuPhone(user.getuPhone());
+    	
+    	for(Address ad:user.getAddress()) {
+    		AddressTemp addre=new AddressTemp();
+    		addre.setId(ad.getId());
+    		addre.setFlatNo(ad.getFlatNo());
+    		addre.setLandMark(ad.getLandMark());
+    		addre.setStreet(ad.getStreet());
+    		addre.setPin(ad.getPin());
+    		addre.setCity(ad.getCity());
+    		addre.setName(ad.getName());
+    		addre.setPhone(ad.getPhone());
+    		addre.setEmail(ad.getEmail());
+    		addre.setState(ad.getState());
+    		addre.setCountry(ad.getCountry());
+    		address.add(addre);
+    		
+    		
+    	}
+    	viewAddressList.setAddress(address);
+    	return viewAddressList;
+    }
+    @Override
+    public String deleteAddress(int id) {
+    	addressRepository.deleteById(id);
+    	return "deleted";
+    }
+    @Override
+    public String updateAddress(Address address,int addId) {
+    	
+    	Address add=addressRepository.findByAddId(addId);
+    	add.setName(address.getName());
+    	add.setPhone(address.getPhone());
+    	add.setFlatNo(address.getFlatNo());
+    	add.setCity(address.getCity());
+    	add.setLandMark(address.getLandMark());
+    	add.setStreet(address.getStreet());
+    	add.setPin(address.getPin());
+    	add.setEmail(address.getEmail());
+    	add.setUserid(add.getUserid());
+    	add.setState(address.getState());
+    	add.setCountry(address.getCountry());
+    	addressRepository.save(add);
+     return "updated";
     }
     
     //  Image Uploaded

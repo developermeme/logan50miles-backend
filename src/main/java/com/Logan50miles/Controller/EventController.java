@@ -15,9 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.Logan50miles.Service.EventService;
+import com.google.zxing.WriterException;
 import com.Logan50miles.Entity.BookingEvents;
 import com.Logan50miles.Entity.Events;
-import com.Logan50miles.Service.EventService;
 import com.Logan50miles.Util.ResourceNotFoundException;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
@@ -62,7 +63,7 @@ public class EventController {
 	} 
 
 	@PostMapping("add/booking") 
-	public BookingEvents addBookingEvents(BookingEvents bookingEvents, MultipartFile file, MultipartFile file1) throws IOException, ResourceNotFoundException{ 
+	public BookingEvents addBookingEvents(BookingEvents bookingEvents, MultipartFile file, MultipartFile file1) throws IOException, ResourceNotFoundException, WriterException{ 
 		return eventService.addBookingEvents(bookingEvents, file, file1); 
 	} 
  

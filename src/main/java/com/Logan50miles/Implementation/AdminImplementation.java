@@ -1,6 +1,5 @@
 package com.Logan50miles.Implementation;
 
-import java.text.ParseException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ import com.Logan50miles.Util.ResourceNotFoundException;
 @Service
 public class AdminImplementation implements AdminService {
 
-	/**/
 	@Autowired
     private AdminRepository adminrepository;
 	@Autowired
@@ -121,7 +119,7 @@ public class AdminImplementation implements AdminService {
     }
     
     @Override
-    public ResponseEntity<String> resetAdminPassword(String emailId, String password) throws ParseException {
+    public ResponseEntity<String> resetAdminPassword(String emailId, String password)  {
         ResponseEntity<String> result = null;
         Admin adminData = adminrepository.findByEmailId(emailId);
         if(adminData!=null) {
@@ -141,7 +139,7 @@ public class AdminImplementation implements AdminService {
     }
     
     @Override
-    public ResponseEntity<String> forgotPassword(String emailId) throws ParseException {
+    public ResponseEntity<String> forgotPassword(String emailId)  {
         ResponseEntity<String> result = null;
         Admin adminData = adminrepository.findByEmailId(emailId);
         
