@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.Logan50miles.Entity.BookingTickets;
+import com.Logan50miles.Entity.Mailconfiguration;
 import com.Logan50miles.Entity.Tickets;
 import com.Logan50miles.Repository.BookingTicketsRepository;
+import com.Logan50miles.Repository.MailConfigurationRepository;
 import com.Logan50miles.Repository.TicketsRepository;
 import com.Logan50miles.Service.TicketService;
 import com.Logan50miles.Util.Mailer;
@@ -23,6 +25,9 @@ public class TicketImplementation implements TicketService {
 	private TicketsRepository ticketsRepository;
 	@Autowired
 	private BookingTicketsRepository bookingTicketsRepository;
+	@Autowired
+	private MailConfigurationRepository mailConfigurationRepository;
+	
 	
 	String image = null;
 	@Override
@@ -128,8 +133,10 @@ public class TicketImplementation implements TicketService {
 				"<h5>Date: "+t.getDate()+"</h5>"+
 				"<h5>Amount Paid"+bt.getTotal()+"</h5>"+
 				"</div>";
+		Mailconfiguration m = mailConfigurationRepository.findAll().stream().filter(x -> x.getType().equals("general"))
+				.findAny().orElse(null);
 		Mailer mail = new Mailer();
-    	mail.sendMail("PIKE50MILES TICKET CONFIRMATION", text , bt.getUseremail(), "no_reply@memebike.tv", "Sal76928");   	
+    	mail.sendMail("LOGAN50MILES TICKET CONFIRMATION", text , bt.getUseremail(), m.getEmail(), m.getPassword());   	
 		return bookingTicketsRepository.save(bt);
 	}
 	

@@ -19,6 +19,7 @@ import com.Logan50miles.Entity.BookingEvents;
 import com.Logan50miles.Entity.Events;
 import com.Logan50miles.Entity.FeedComment;
 import com.Logan50miles.Entity.Likes;
+import com.Logan50miles.Entity.Mailconfiguration;
 import com.Logan50miles.Entity.OtpConfirmationPlayer;
 import com.Logan50miles.Entity.PlayerProfile;
 import com.Logan50miles.Entity.Professionals;
@@ -27,6 +28,7 @@ import com.Logan50miles.Repository.BookingEventsRepository;
 import com.Logan50miles.Repository.EventsRepository;
 import com.Logan50miles.Repository.FeedCommentRepository;
 import com.Logan50miles.Repository.LikesRepository;
+import com.Logan50miles.Repository.MailConfigurationRepository;
 import com.Logan50miles.Repository.OtpConfirmationPlayerRepository;
 import com.Logan50miles.Repository.PlayerProfileRepository;
 import com.Logan50miles.Repository.ProfessionalsRepository;
@@ -62,6 +64,8 @@ public class ProfessionalImplementation implements ProfessionalService {
 	private BookingEventsRepository bookingEventsRepository;
 	@Autowired
 	private LikesRepository likesRepository;
+	@Autowired
+	private MailConfigurationRepository mailConfigurationRepository;
 
 	// AWS S3 BUCKET ACCESS
 	@Value("${cloud.aws.credentials.accessKey}")
@@ -107,7 +111,7 @@ public class ProfessionalImplementation implements ProfessionalService {
 				this.uploadImage(file, "event");
 				playerdetails.setPimg(image + file.getOriginalFilename());
 			} else {
-				playerdetails.setPimg(playerdetails.getPimg());
+				playerdetails.setPimg("https://mylogantown.s3.amazonaws.com/event/player.png");
 			}
 			if (file1 != null) {
 				this.uploadImage(file1, "event");
@@ -159,10 +163,12 @@ public class ProfessionalImplementation implements ProfessionalService {
 				.orElseThrow(() -> new ResourceNotFoundException("Resource Not found"));
 		pro.setStatus(status);
 		professionalsRepository.save(pro);
-		String text = "<h4><u>Hi " + pro.getFname() + "</u></h4>" + "<h5>Your Player Registration for Pike50Miles has "
+		String text = "<h4><u>Hi " + pro.getFname() + "</u></h4>" + "<h5>Your Player Registration for Logan50Miles has "
 				+ status + "</h5>";
+		Mailconfiguration m = mailConfigurationRepository.findAll().stream().filter(x -> x.getType().equals("general"))
+				.findAny().orElse(null);
 		Mailer mail = new Mailer();
-		mail.sendMail("PIKE50MILES PLAYER APPROVAL", text, pro.getEmail(), "no_reply@memebike.tv", "Sal76928");
+		mail.sendMail("LOGAN50MILES PLAYER APPROVAL", text, pro.getEmail(), m.getEmail(), m.getPassword());
 
 		return "Player Approved";
 	}
@@ -295,10 +301,12 @@ public class ProfessionalImplementation implements ProfessionalService {
 			}
 			OtpConfirmationPlayer Otp = new OtpConfirmationPlayer(playerData);
 			otpConfirmationPlayerRepository.save(Otp);
+			Mailconfiguration m = mailConfigurationRepository.findAll().stream().filter(x -> x.getType().equals("general"))
+					.findAny().orElse(null);
 			Mailer mail = new Mailer();
-			mail.sendMail("PIKE50MILES Reset Password", "PIKE50MILES verification OTP is:" + Otp.getOtp(), emailId,
-					"no_reply@memebike.tv", "Sal76928");
-			verificationOtp(playerData.getPhoneno(), "PIKE50MILES verification OTP is:" + Otp.getOtp());
+			mail.sendMail("LOGAN50MILES Reset Password", "LOGAN50MILES verification OTP is:" + Otp.getOtp(), emailId,
+					m.getEmail(), m.getPassword());
+			verificationOtp(playerData.getPhoneno(), "LOGAN50MILES verification OTP is:" + Otp.getOtp());
 			result = ResponseEntity.status(HttpStatus.CREATED).body("{ \"message\" : \"" + Otp.getOtp() + "\"}");
 		} else {
 			result = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\" : \"Please Register\"}");

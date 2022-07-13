@@ -353,7 +353,7 @@ public class NazcaCartController {
 		Mailconfiguration m = mailConfigurationRepository.findAll().stream().filter(x -> x.getType().equals("general"))
 				.findAny().orElse(null);
 		Mailer mail = new Mailer();
-		mail.sendMail("NAZCA ORDER CONFIRMATION", address + text, order.getUserId(), m.getEmail(), m.getPassword());
+		mail.sendMail("LOGAN50MILES SHOP ORDER CONFIRMATION", address + text, order.getUserId(), m.getEmail(), m.getPassword());
 	}
 
 	@PostMapping("send/password")
@@ -364,9 +364,9 @@ public class NazcaCartController {
 			Mailconfiguration m = mailConfigurationRepository.findAll().stream()
 					.filter(x -> x.getType().equals("general")).findAny().orElse(null);
 			Mailer mail = new Mailer();
-			mail.sendMail(" NAZCA LOGIN CREDENTIALS", address, username, m.getEmail(), m.getPassword());
+			mail.sendMail(" LOGAN50MILES LOGIN CREDENTIALS", address, username, m.getEmail(), m.getPassword());
 			this.verifivcationOtp(phone,
-					"Greeting from Nazca dear customer your Username :" + username + "password:" + password);
+					"Greeting from Logan50Miles dear customer your Username :" + username + "password:" + password);
 			return "send";
 		} catch (Exception e) {
 			return e.getMessage();

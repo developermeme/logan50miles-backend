@@ -14,8 +14,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.Logan50miles.Entity.BookingEvents;
 import com.Logan50miles.Entity.Events;
+import com.Logan50miles.Entity.Mailconfiguration;
 import com.Logan50miles.Repository.BookingEventsRepository;
 import com.Logan50miles.Repository.EventsRepository;
+import com.Logan50miles.Repository.MailConfigurationRepository;
 import com.Logan50miles.Service.EventService;
 import com.Logan50miles.Util.Mailer;
 import com.Logan50miles.Util.QRCodeGenerator;
@@ -37,6 +39,8 @@ public class EventImplementation implements EventService{
 	private EventsRepository eventsRepository;
 	@Autowired
 	private BookingEventsRepository bookingEventsRepository;
+	@Autowired
+	private MailConfigurationRepository mailConfigurationRepository;
 	
 	//AWS S3 BUCKET ACCESS
     @Value("${cloud.aws.credentials.accessKey}")
@@ -186,9 +190,10 @@ public class EventImplementation implements EventService{
 				"<h5>Event Registration No : "+bookingEvents.getRegistrationnumber()+"</h5>"+
 				"<h5>Event Name : "+bookingEvents.getDetails()+"</h5>"+
 				"<h5>Event Date : "+bookingEvents.getDate()+"</h5>";
-				
+		Mailconfiguration m = mailConfigurationRepository.findAll().stream().filter(x -> x.getType().equals("general"))
+				.findAny().orElse(null);		
 		Mailer mail = new Mailer();
-    	mail.sendMail("PIKE50MILES PLAYER APPROVAL", text , bookingEvents.getMail(), "no_reply@memebike.tv", "Sal76928");   	
+    	mail.sendMail("LOGAN50MILES PLAYER APPROVAL", text , bookingEvents.getMail(), m.getEmail(), m.getPassword());   	
 		
 		return bookingEventsRepository.save(bookingEvents);
 	}

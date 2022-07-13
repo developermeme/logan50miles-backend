@@ -9,8 +9,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.Logan50miles.Entity.Admin;
+import com.Logan50miles.Entity.Mailconfiguration;
 import com.Logan50miles.Entity.OtpConfirmationAdmin;
 import com.Logan50miles.Repository.AdminRepository;
+import com.Logan50miles.Repository.MailConfigurationRepository;
 import com.Logan50miles.Repository.OtpConfirmationAdminRepository;
 import com.Logan50miles.Service.AdminService;
 import com.Logan50miles.Util.Mailer;
@@ -23,6 +25,8 @@ public class AdminImplementation implements AdminService {
     private AdminRepository adminrepository;
 	@Autowired
     private OtpConfirmationAdminRepository otpConfirmationAdminRepository;
+	@Autowired
+    private MailConfigurationRepository mailConfigurationRepository;
     
     BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
     
@@ -151,9 +155,11 @@ public class AdminImplementation implements AdminService {
         	OtpConfirmationAdmin Otp = new OtpConfirmationAdmin(adminData);
         	System.out.println(Otp.getOtp());
         	otpConfirmationAdminRepository.save(Otp);
+        	Mailconfiguration m = mailConfigurationRepository.findAll().stream().filter(x -> x.getType().equals("general"))
+    				.findAny().orElse(null);
         	Mailer mail = new Mailer();
-        	mail.sendMail("MEMEMOVE Reset Password", "MEMEMOVE verification OTP is:" + Otp.getOtp(), emailId, "no_reply@memebike.tv", "Sal76928");
-        	//    verificationOtp(userData.getMobilenumber(), "MEMEMOVE verification OTP is:" + Otp.getOtp());
+        	mail.sendMail("LOGAN50MILES Reset Password", "LOGAN50MILES verification OTP is:" + Otp.getOtp(), emailId, m.getEmail(), m.getPassword());
+        	//    verificationOtp(userData.getMobilenumber(), "LOGAN50MILES verification OTP is:" + Otp.getOtp());
             result = ResponseEntity.status(HttpStatus.CREATED).body("{ \"message\" : \""+Otp.getOtp()+"\"}");
         }
         else{

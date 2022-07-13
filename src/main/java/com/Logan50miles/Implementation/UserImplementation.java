@@ -112,7 +112,7 @@ public class UserImplementation implements UserService {
     			user.setiUmg(image+file.getOriginalFilename());
 			}
 			else {
-				user.setiUmg(user.getiUmg());
+				user.setiUmg("https://mylogantown.s3.amazonaws.com/event/player.png");
 			}
     		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
     		user.setUserReferral(createReferralCode());
@@ -120,7 +120,7 @@ public class UserImplementation implements UserService {
     		OtpConfirmation confirmationToken = new OtpConfirmation(user);
 			otpConfirmationRepository.save(confirmationToken);
 			verificationOtp(user.getuPhone(),
-					"Your PIKE50MILES user verification OTP is:" + confirmationToken.getOtp());
+					"Your LOGAN50MILES user verification OTP is:" + confirmationToken.getOtp());
     		result = ResponseEntity.status(HttpStatus.CREATED).body("{\"message\" : \"User Registered Successfully\"}");
     	}
     	return result;
@@ -188,7 +188,7 @@ public class UserImplementation implements UserService {
 			OtpConfirmation confirmationToken = new OtpConfirmation(user);
 			System.out.println(confirmationToken.getOtp());
 			otpConfirmationRepository.save(confirmationToken);
-			verificationOtp(user.getuPhone(),"Your PIKE50MILES verification OTP is:"+confirmationToken.getOtp());
+			verificationOtp(user.getuPhone(),"Your LOGAN50MILES verification OTP is:"+confirmationToken.getOtp());
 			result = ResponseEntity.status(HttpStatus.CREATED).body("registered:" + user.getUserid());
 		}
 		return result;
@@ -251,7 +251,7 @@ public class UserImplementation implements UserService {
             System.out.println(Otp.getOtp());
             otpConfirmationRepository.save(Otp);
 
-            verificationOtp(userData.getuPhone(), "MEMEMOVE verification OTP is:" + Otp.getOtp());
+            verificationOtp(userData.getuPhone(), "LOGAN50MILES verification OTP is:" + Otp.getOtp());
             result = ResponseEntity.status(HttpStatus.CREATED).body("{ \"message\" : \""+Otp.getOtp()+"\"}");
         }else{
             result = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\" : \"Please Register\"}");
