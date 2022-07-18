@@ -30,4 +30,6 @@ public interface TicketService {
 
 	BookingTickets getBookingTicketsById(int id) throws ResourceNotFoundException;
 
+	BookingTickets getBookingTicketsByEmail(String email);
+
 }

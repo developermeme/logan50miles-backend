@@ -122,17 +122,31 @@ public class TicketImplementation implements TicketService {
 		ticketsRepository.save(t);
 		image = QRCodeGenerator.getQRCodeImage(String.valueOf(bt.getBid()),250,250);
 		
+		/*String text = "<div style\"border:1px solid black; text-align:center; width:21%, line-height:33px\">"+
+					"<img src =\"https://mylogantown.s3.amazonaws.com/event/wallpaperflare.com_wallpaper.jpg\">"
+					+ "<h4><u>"+t.getEvent()+" Tickets Information:</u></h4>"+
+					image+
+					"<p>Email: "+bt.getUseremail()+"</p>"+
+					"<p>No of Tickets: "+bt.getQuantity()+"</p>"+
+					"<p>Venue: "+t.getVenue()+"</p>"+
+					"<p>Stand: "+t.getTickettype()+"</p>"+
+					"<p>Date: "+t.getDate()+"</p>"+
+					"<p>Amount Paid"+bt.getTotal()+"</p>"+
+					"</div>";*/
+		
 		String text =
 				"<div style=\"border:1px solid black; padding:10px ; text-align:center;\">"+
 				"<h4><u>"+t.getEvent()+" Tickets Information:</u></h4>"+
 				image+
-				"<h5>Email: "+bt.getUseremail()+"</h5>"+
-				"<h5>No of Tickets: "+bt.getQuantity()+"</h5>"+
-				"<h5>Venue: "+t.getVenue()+"</h5>"+
-				"<h5>Stand: "+t.getTickettype()+"</h5>"+
-				"<h5>Date: "+t.getDate()+"</h5>"+
-				"<h5>Amount Paid"+bt.getTotal()+"</h5>"+
-				"</div>";
+				"<table border='0' align='center'>"+
+				"<tr></tr>"+
+				"<tr><td><h5>Email </h5></td> <td><h5> : "+bt.getUseremail()+"</h5></td></tr>"+
+				"<tr><td><h5>No of Tickets </h5></td> <td><h5> : "+bt.getQuantity()+"</h5></td></tr>"+
+				"<tr><td><h5>Venue </h5></td> <td><h5> : "+t.getVenue()+"</h5></td></tr>"+
+				"<tr><td><h5>Stand </h5></td> <td><h5> : "+t.getTickettype()+"</h5></td></tr>"+
+				"<tr><td><h5>Date </h5></td> <td><h5> : "+t.getDate()+"</h5></td></tr>"+
+				"<tr><td><h5>Amount Paid </h5></td> <td><h5> : "+bt.getTotal()+"</h5></td></tr>"+
+				"</table></div>";
 		Mailconfiguration m = mailConfigurationRepository.findAll().stream().filter(x -> x.getType().equals("general"))
 				.findAny().orElse(null);
 		Mailer mail = new Mailer();
@@ -199,4 +213,8 @@ public class TicketImplementation implements TicketService {
 		return bookingTicketsRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Resource Not found"));
 	}
 
+	@Override
+	public BookingTickets getBookingTicketsByEmail(String email) {
+		return bookingTicketsRepository.findByUseremail(email);
+	}
 }

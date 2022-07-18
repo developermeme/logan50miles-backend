@@ -75,5 +75,10 @@ public class TicketController {
 	public BookingTickets getBookingTicketsById(int id) throws ResourceNotFoundException {
 		return ticketService.getBookingTicketsById(id);
 	}
+	
+	@GetMapping("get/bookingtickets/byEmail")
+	public BookingTickets getBookingTicketsByEmail(String email) {
+		return ticketService.getBookingTicketsByEmail(email);
+	}
 
 }
