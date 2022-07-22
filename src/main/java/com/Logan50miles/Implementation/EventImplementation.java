@@ -184,12 +184,16 @@ public class EventImplementation implements EventService{
 		eventsRepository.save(e);
 		image = QRCodeGenerator.getQRCodeImage(String.valueOf(bookingEvents.getRegistrationnumber()),250,250);
 		String text = "<h4><u>Hi "+bookingEvents.getName()+"</u></h4>"+
-				"<h5>"+bookingEvents.getTitle()+" Event has Registered Successfully. </h5><h5></h5>"+
-				"<h5><u> Event Information<u></h5>"+
+				"<h4>"+bookingEvents.getTitle()+" Event has Registered Successfully. </h4>>"+
+				"<div style=\"border:1px solid black; padding:10px ; text-align:center;\">"+
+				"<h3><u> Event Information<u></h3>"+
 				image+
-				"<h5>Event Registration No : "+bookingEvents.getRegistrationnumber()+"</h5>"+
-				"<h5>Event Name : "+bookingEvents.getDetails()+"</h5>"+
-				"<h5>Event Date : "+bookingEvents.getDate()+"</h5>";
+				"<table border='0' align='center'>"+
+				"<tr></tr>"+
+				"<tr><td><h5>Event Registration No </h5></td> <td><h5> : "+bookingEvents.getRegistrationnumber()+"</h5></td></tr>"+
+				"<tr><td><h5>Event Name </h5></td> <td><h5> : "+bookingEvents.getDetails()+"</h5></td></tr>"+
+				"<tr><td><h5>Event Date </h5></td> <td><h5> : "+bookingEvents.getDate()+"</h5></td></tr>"+
+				"</table></div>";
 		Mailconfiguration m = mailConfigurationRepository.findAll().stream().filter(x -> x.getType().equals("general"))
 				.findAny().orElse(null);		
 		Mailer mail = new Mailer();

@@ -145,7 +145,7 @@ public class TicketImplementation implements TicketService {
 				"<tr><td><h5>Venue </h5></td> <td><h5> : "+t.getVenue()+"</h5></td></tr>"+
 				"<tr><td><h5>Stand </h5></td> <td><h5> : "+t.getTickettype()+"</h5></td></tr>"+
 				"<tr><td><h5>Date </h5></td> <td><h5> : "+t.getDate()+"</h5></td></tr>"+
-				"<tr><td><h5>Amount Paid </h5></td> <td><h5> : "+bt.getTotal()+"</h5></td></tr>"+
+				"<tr><td><h5>Amount Paid </h5></td> <td><h5> : $ "+bt.getTotal()+"</h5></td></tr>"+
 				"</table></div>";
 		Mailconfiguration m = mailConfigurationRepository.findAll().stream().filter(x -> x.getType().equals("general"))
 				.findAny().orElse(null);
